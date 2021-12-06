@@ -24,7 +24,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{47D525E0-84AE-47A3-AE9B-1911EEDE8015}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		src\MediatR.AspNetCore.Endpoints\Package.nuspec = src\MediatR.AspNetCore.Endpoints\Package.nuspec
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputValidation", "samples\InputValidation\InputValidation.csproj", "{7F083B0E-4053-487D-AA8B-B43783697609}"

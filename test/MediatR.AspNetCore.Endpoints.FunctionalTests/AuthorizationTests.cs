@@ -51,7 +51,7 @@ namespace MediatREndpoint.FunctionalTests
         public async Task UnauthorizedStatusCodeOnAuthorizedRequest()
         {
             var client = testServer.CreateClient();
-            HttpResponseMessage response = await client.GetAsync("/" + nameof(AuthorizedRequest));
+            var response = await client.GetAsync("/" + nameof(AuthorizedRequest));
 
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         }
@@ -60,7 +60,7 @@ namespace MediatREndpoint.FunctionalTests
         public async Task OkStatusCodeOnAllowAnonymousRequest()
         {
             var client = testServer.CreateClient();
-            HttpResponseMessage response = await client.GetAsync("/" + nameof(AllowAnonymousRequest));
+            var response = await client.GetAsync("/" + nameof(AllowAnonymousRequest));
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }

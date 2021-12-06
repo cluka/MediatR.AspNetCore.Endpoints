@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace MediatR.AspNetCore.Endpoints
@@ -23,16 +24,19 @@ namespace MediatR.AspNetCore.Endpoints
 
             var mediatorEndpointCollections = endpointsBuilder.ServiceProvider.GetService<MediatorEndpointCollections>();
 
-            foreach (var endpoint in mediatorEndpointCollections.Endpoints)
+            if (mediatorEndpointCollections?.Endpoints != null)
             {
-                var routePattern = RoutePatternFactory.Parse(endpoint.Uri);
-
-                var builder = endpointsBuilder.Map(routePattern, MediatorRequestDelegate);
-                builder.WithDisplayName(endpoint.RequestType.Name);
-
-                for (var i = 0; i < endpoint.Metadata.Count; i++)
+                foreach (var endpoint in mediatorEndpointCollections?.Endpoints)
                 {
-                    builder.WithMetadata(endpoint.Metadata[i]);
+                    var routePattern = RoutePatternFactory.Parse(endpoint.Uri);
+
+                    var builder = endpointsBuilder.Map(routePattern, MediatorRequestDelegate);
+                    builder.WithDisplayName(endpoint.RequestType.Name);
+
+                    for (var i = 0; i < endpoint.Metadata.Count; i++)
+                    {
+                        builder.WithMetadata(endpoint.Metadata[i]);
+                    }
                 }
             }
         }
@@ -41,10 +45,10 @@ namespace MediatR.AspNetCore.Endpoints
         {
             var endpoint = context.GetEndpoint();
 
-            var requestMetadata = endpoint.Metadata.GetMetadata<IMediatorEndpointMetadata>();
+            var requestMetadata = endpoint?.Metadata.GetMetadata<IMediatorEndpointMetadata>();
 
             var optionsAccessor = context.RequestServices.GetService<IOptions<MediatorEndpointOptions>>();
-            var options = optionsAccessor.Value;
+            var options = optionsAccessor?.Value;
 
             object model;
             if (context.Request.ContentLength.GetValueOrDefault() != 0)
@@ -55,15 +59,15 @@ namespace MediatR.AspNetCore.Endpoints
                     model = await JsonSerializer.DeserializeAsync(context.Request.Body, requestMetadata.RequestType, options.JsonSerializerOptions, context.RequestAborted);
                     MapRouteData(requestMetadata, context.GetRouteData(), model);
                 }
-                catch (JsonException)
+                catch (JsonException je)
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    return;
+                    throw;
                 }
                 catch (Exception exception) when (exception is FormatException || exception is OverflowException)
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    return;
+                    throw;
                 }
             }
             else

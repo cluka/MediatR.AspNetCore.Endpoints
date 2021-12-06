@@ -34,7 +34,7 @@ namespace InputValidation.Middlewares
 
                 context.Response.Headers.Add("content-type", "application/json");
 
-                await JsonSerializer.SerializeAsync(context.Response.Body, errors, errors.GetType(), null, context.RequestAborted);
+                await JsonSerializer.SerializeAsync(context.Response.Body, errors, errors.GetType(), null as JsonSerializerOptions, context.RequestAborted);
                 await context.Response.Body.FlushAsync(context.RequestAborted);
             }
         }
