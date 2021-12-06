@@ -3,19 +3,22 @@
   <PropertyGroup>
     <IsPackable>true</IsPackable>
     <Version>3.1.0</Version>
-    <Description>pure MediatR for ASP.NET Core without the needs for controllers</Description>
-    <Copyright>Copyright Kahbazi</Copyright>
+    <Description>pure MediatR for ASP.NET Core without the needs for controllers .net 6.0</Description>
+    <Copyright>Copyright Luka</Copyright>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>MediatR.AspNetCore.Endpoints</AssemblyName>
     <PackageId>MediatR.AspNetCore.Endpoints</PackageId>
     <PackageTags>mediator;aspnetcore;endpoints;</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/jbogard/MediatR/master/assets/logo/gradient_128x128.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/Kahbazi/MediatR.AspNetCore.Endpoints</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Kahbazi/MediatR.AspNetCore.Endpoints/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/cluka/MediatR.AspNetCore.Endpoints</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/cluka/MediatR.AspNetCore.Endpoints/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>git://github.com/Kahbazi/MediatR.AspNetCore.Endpoints</RepositoryUrl>
-    <Authors>Kahbazi</Authors>
+    <RepositoryUrl>git://github.com/cluka/MediatR.AspNetCore.Endpoints</RepositoryUrl>
+    <Authors>Luka</Authors>
     <LangVersion>default</LangVersion>
+    <PackageVersion>1</PackageVersion>
+    <PackageReleaseNotes>.net 6.0</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     
   </PropertyGroup>
 
