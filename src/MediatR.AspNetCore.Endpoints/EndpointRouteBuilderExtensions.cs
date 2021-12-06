@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace MediatR.AspNetCore.Endpoints
@@ -24,19 +23,16 @@ namespace MediatR.AspNetCore.Endpoints
 
             var mediatorEndpointCollections = endpointsBuilder.ServiceProvider.GetService<MediatorEndpointCollections>();
 
-            if (mediatorEndpointCollections?.Endpoints != null)
+            foreach (var endpoint in mediatorEndpointCollections.Endpoints)
             {
-                foreach (var endpoint in mediatorEndpointCollections?.Endpoints)
+                var routePattern = RoutePatternFactory.Parse(endpoint.Uri);
+
+                var builder = endpointsBuilder.Map(routePattern, MediatorRequestDelegate);
+                builder.WithDisplayName(endpoint.RequestType.Name);
+
+                for (var i = 0; i < endpoint.Metadata.Count; i++)
                 {
-                    var routePattern = RoutePatternFactory.Parse(endpoint.Uri);
-
-                    var builder = endpointsBuilder.Map(routePattern, MediatorRequestDelegate);
-                    builder.WithDisplayName(endpoint.RequestType.Name);
-
-                    for (var i = 0; i < endpoint.Metadata.Count; i++)
-                    {
-                        builder.WithMetadata(endpoint.Metadata[i]);
-                    }
+                    builder.WithMetadata(endpoint.Metadata[i]);
                 }
             }
         }
@@ -59,15 +55,15 @@ namespace MediatR.AspNetCore.Endpoints
                     model = await JsonSerializer.DeserializeAsync(context.Request.Body, requestMetadata.RequestType, options.JsonSerializerOptions, context.RequestAborted);
                     MapRouteData(requestMetadata, context.GetRouteData(), model);
                 }
-                catch (JsonException je)
+                catch (JsonException)
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    throw;
+                    return;
                 }
                 catch (Exception exception) when (exception is FormatException || exception is OverflowException)
                 {
                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    throw;
+                    return;
                 }
             }
             else
